@@ -6,13 +6,16 @@ pragma solidity ^0.8.9;
 
 // We import this library to be able to use console.log
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 
 // This is the main building block for smart contracts.
 contract Token {
     // Some string type variables to identify the token.
     string public name = "My Hardhat Token";
-    string public symbol = "MHT";
+    string private _symbol = "MHT";
 
     // The fixed amount of tokens stored in an unsigned integer type variable.
     uint256 public totalSupply = 1000000;
@@ -75,4 +78,27 @@ contract Token {
     function balanceOf(address account) external view returns (uint256) {
         return balances[account];
     }
+
+    fallback() external payable {
+        console.log("----- fallback:", msg.value);
+    }
+
+    receive() external payable {
+        console.log("----- receive:", msg.value);
+    }
+
+    function supportsInterface(bytes4 interfaceID) external pure returns (bool) {
+        return interfaceID == type(IERC20).interfaceId; // If your token is ERC-20
+    }
+
+    function decimals() public pure returns (uint8) {
+        return 18;
+    }
+
+    function symbol() public pure returns (string memory) {
+        return "MHT";
+    }
+
+
+
 }
