@@ -29,10 +29,10 @@ async function main() {
   console.log("Token address:", token.address);
 
   // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(token);
+  //saveFrontendFiles(token);
 }
 
-function saveFrontendFiles(token) {
+/*function saveFrontendFiles(token) {
   const fs = require("fs");
   const contractsDir = path.join(__dirname, "..", "frontend", "src", "contracts");
 
@@ -51,7 +51,7 @@ function saveFrontendFiles(token) {
     path.join(contractsDir, "Token.json"),
     JSON.stringify(TokenArtifact, null, 2)
   );
-}
+}*/
 
 main()
   .then(() => process.exit(0))
