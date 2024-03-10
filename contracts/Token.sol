@@ -6,9 +6,7 @@ pragma solidity ^0.8.9;
 
 // We import this library to be able to use console.log
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./IERC20.sol";
 
 
 // This is the main building block for smart contracts.
