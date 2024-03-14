@@ -26,10 +26,46 @@ async function main() {
   const contract = await Contract.deploy();
   await contract.deployed();
 
-  console.log("Token address:", contract.address);
+  console.log("Contract address:", contract.address);
 
   // We also save the contract's artifacts and address in the frontend directory
   //saveFrontendFiles(token);
+  saveContractAddressToFrontend(contract.address);
+}
+
+function saveContractAddressToFrontend(contractAddress) {
+    const fs = require("fs");
+    const replace = require('replace-in-file');
+    const addressPathFile = path.join(__dirname, "address_path.txt");
+    const addressPath = fs.readFileSync(addressPathFile, 'utf8').trim();
+    console.log("ADDRESS PATH:", addressPath);
+
+    const regex = new RegExp('".*"', 'i');
+    const options = {
+      //dry: true,
+      //Single file
+      files: addressPath,
+
+      //Replacement to make (string or regex)
+      from: regex,
+      to: '"'+contractAddress+'"',
+    };
+    //console.log(options)
+    try {
+      const changedFiles = replace.sync(options);
+      const list = JSON.parse(changedFiles);
+      const file = list[0].file
+      const changed = hasChanged
+      if (!hasChanged) {
+        console.log("Error:", file, "could not be changed");
+      }
+      //console.log('Modified files:', changedFiles);
+    }
+    catch (error) {
+      console.error('Error occurred:', error);
+    }
+
+    //fs.writeFileSync(addressPathFile, contractAddress);
 }
 
 /*function saveFrontendFiles(token) {
@@ -59,3 +95,5 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+//saveContractAddressToFrontend("contractAddress")
