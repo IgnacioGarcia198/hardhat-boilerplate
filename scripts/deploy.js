@@ -53,8 +53,7 @@ function saveContractAddressToFrontend(contractAddress) {
     //console.log(options)
     try {
       const changedFiles = replace.sync(options);
-      const list = JSON.parse(changedFiles);
-      const file = list[0].file
+      console.log(changedFiles)
       const changed = hasChanged
       if (!hasChanged) {
         console.log("Error:", file, "could not be changed");
