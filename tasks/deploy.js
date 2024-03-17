@@ -52,27 +52,7 @@ async function deployContract(deployer, contractName) {
 }
 
 function saveContractAddressToFrontend(contractName, contractAddress, addressPath) {
-    const ktConstantDeclaration = "const val " + contractName.replace(/([A-Z])/g, '_$1').toUpperCase().slice(1)+"_ADDRESS = ";
-    console.log(ktConstantDeclaration)
-    const newLine = `${ktConstantDeclaration}"${contractAddress}"`;
-    if (fs.existsSync(addressPath)) {
-        console.log('Address file exists.');
-        const addressFileText = fs.readFileSync(addressPath, 'utf8').trim();
-        const lines = addressFileText.split("\n");
-        const filteredLines = lines.filter(item => !item.startsWith(ktConstantDeclaration));
-        const filteredText = filteredLines.join("\n");
-        console.log("filtered text:", filteredText);
-        const newText = filteredText + "\n" + newLine;
-        console.log(newText);
-        fs.writeFileSync(addressPath, newText);
-    } else {
-        console.log('Address file does not exist, creating...');
-        const package = getPackageLine(addressPath);
-        console.log(package);
-        const newText = package + "\n\n" + newLine;
-        console.log(newText);
-        fs.writeFileSync(addressPath, newText);
-    }
+    writeAddressOrAbi(contractName, addressPath, contractAddress, false);
 }
 
 function getOneLineAbi(contractName, abiPath) {
@@ -84,26 +64,31 @@ function getOneLineAbi(contractName, abiPath) {
 }
 
 function saveContractAbiToFrontend(contractName, oneLineAbi, abiPath) {
-    const ktConstantDeclaration = "const val " + contractName.replace(/([A-Z])/g, '_$1').toUpperCase().slice(1)+"_ABI = ";
+    writeAddressOrAbi(contractName, abiPath, oneLineAbi, true);
+}
+
+function writeAddressOrAbi(contractName, filePath, abiOrAddress, isAbi) {
+    const declarationEnd = isAbi ? "_ABI = " : "_ADDRESS = ";
+    const ktConstantDeclaration = "const val " + contractName.replace(/([A-Z])/g, '_$1').toUpperCase().slice(1) + declarationEnd;
     console.log(ktConstantDeclaration)
-    const newLine = `${ktConstantDeclaration}"""${oneLineAbi}"""`;
-    if (fs.existsSync(abiPath)) {
+    const newLine = `${ktConstantDeclaration}"""${abiOrAddress}"""`;
+    if (fs.existsSync(filePath)) {
         console.log('Abi file exists.');
-        const abiFileText = fs.readFileSync(abiPath, 'utf8').trim();
-        const lines = abiFileText.split("\n");
+        const fileText = fs.readFileSync(filePath, 'utf8').trim();
+        const lines = fileText.split("\n");
         const filteredLines = lines.filter(item => !item.startsWith(ktConstantDeclaration));
         const filteredText = filteredLines.join("\n");
         console.log("filtered text:", filteredText);
         const newText = filteredText + "\n" + newLine;
         console.log(newText);
-        fs.writeFileSync(abiPath, newText);
+        fs.writeFileSync(filePath, newText);
     } else {
         console.log('Abi file does not exist, creating...');
-        const package = getPackageLine(abiPath);
+        const package = getPackageLine(filePath);
         console.log(package);
         const newText = package + "\n\n" + newLine;
         console.log(newText);
-        fs.writeFileSync(abiPath, newText);
+        fs.writeFileSync(filePath, newText);
     }
 }
 
