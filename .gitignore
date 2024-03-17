@@ -4,4 +4,4 @@ node_modules
 #Hardhat files
 cache
 artifacts
-scripts/address_path.txt
+**/address_path.txt
