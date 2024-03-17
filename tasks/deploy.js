@@ -23,11 +23,9 @@ async function runTask(taskArgs, hre) {
       const addressPathFile = path.join(__dirname, "address_path.txt");
       const addressPath = fs.readFileSync(addressPathFile, 'utf8').trim();
       console.log("ADDRESS PATH:", addressPath);
-      const package = getPackageLine(addressPath);
-      console.log(package);
       for (const contractName of contractNames) {
           console.log(contractName);
-          await deployContractAndSaveAddressToFile(deployer, contractName, addressPath, package)
+          await deployContractAndSaveAddressToFile(deployer, contractName, addressPath)
       }
 }
 
@@ -40,7 +38,7 @@ function getPackageLine(addressPath) {
       return "package " + partAfterTargetFolder.replace(new RegExp(path.sep, 'g'), '.');
 }
 
-async function deployContractAndSaveAddressToFile(deployer, contractName, addressPath, package) {
+async function deployContractAndSaveAddressToFile(deployer, contractName, addressPath) {
     console.log(
         "Deploying the contract:", contractName,
         "\nwith the account:", await deployer.getAddress()
@@ -50,7 +48,7 @@ async function deployContractAndSaveAddressToFile(deployer, contractName, addres
   await contract.deployed();
 
   console.log("Contract address:", contract.address);
-  saveContractAddressToFrontend(contractName, contract.address, addressPath, package);
+  saveContractAddressToFrontend(contractName, contract.address, addressPath);
 }
 
 function saveContractAddressToFrontend(contractName, contractAddress, addressPath) {
@@ -68,6 +66,8 @@ function saveContractAddressToFrontend(contractName, contractAddress, addressPat
         console.log(newText);
         fs.writeFileSync(addressPath, newText);
     } else {
+        const package = getPackageLine(addressPath);
+        console.log(package);
         const newText = package + "\n\n" + newLine;
         console.log(newText);
         fs.writeFileSync(addressPath, newText);
