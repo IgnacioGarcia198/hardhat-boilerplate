@@ -52,6 +52,7 @@ async function deployContract(deployer, contractName) {
 }
 
 function saveContractAddressToFrontend(contractName, contractAddress, addressPath) {
+    console.log("Writing address to frontend file...");
     writeAddressOrAbi(contractName, addressPath, contractAddress, false);
 }
 
@@ -64,39 +65,33 @@ function getOneLineAbi(contractName, abiPath) {
 }
 
 function saveContractAbiToFrontend(contractName, oneLineAbi, abiPath) {
+    console.log("Writing ABI to frontend file...");
     writeAddressOrAbi(contractName, abiPath, oneLineAbi, true);
 }
 
 function writeAddressOrAbi(contractName, filePath, abiOrAddress, isAbi) {
     const declarationEnd = isAbi ? "_ABI = " : "_ADDRESS = ";
     const ktConstantDeclaration = "const val " + contractName.replace(/([A-Z])/g, '_$1').toUpperCase().slice(1) + declarationEnd;
-    console.log(ktConstantDeclaration)
     const newLine = `${ktConstantDeclaration}"""${abiOrAddress}"""`;
     if (fs.existsSync(filePath)) {
-        console.log('Abi file exists.');
+        console.log('file exists, adding to file if needed...');
         const fileText = fs.readFileSync(filePath, 'utf8').trim();
         const lines = fileText.split("\n");
         const filteredLines = lines.filter(item => !item.startsWith(ktConstantDeclaration));
         const filteredText = filteredLines.join("\n");
-        console.log("filtered text:", filteredText);
         const newText = filteredText + "\n" + newLine;
-        console.log(newText);
         fs.writeFileSync(filePath, newText);
     } else {
-        console.log('Abi file does not exist, creating...');
+        console.log('file does not exist, creating...');
         const package = getPackageLine(filePath);
-        console.log(package);
         const newText = package + "\n\n" + newLine;
-        console.log(newText);
         fs.writeFileSync(filePath, newText);
     }
 }
 
 function getPackageLine(addressPath) {
       const directoryPath = path.dirname(addressPath);
-      // Find the index of the target folder in the path
       const index = directoryPath.indexOf(`${path.sep}kotlin${path.sep}`);
       const partAfterTargetFolder = index !== -1 ? directoryPath.substring(index + "kotlin".length + 2) : '';
-      console.log(partAfterTargetFolder)
       return "package " + partAfterTargetFolder.replace(new RegExp(path.sep, 'g'), '.');
 }
