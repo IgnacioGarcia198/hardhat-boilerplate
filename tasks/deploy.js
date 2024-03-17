@@ -8,7 +8,8 @@ task("deploy", "Runs a custom script with parameters")
     try {
         await runTask(taskArgs, hre)
     } catch (error) {
-        console.error('Error occurred:', error);
+        console.error('Error occurred:', '\x1b[31m', error.message, '\x1b[0m');
+        process.exit(1);
     }
 });
 
@@ -21,21 +22,15 @@ async function runTask(taskArgs, hre) {
       const contractNames = taskArgs.contract.split(",")
       console.log(contractNames)
       const addressPathFile = path.join(__dirname, "address_path.txt");
+      if (!fs.existsSync(addressPathFile)) {
+        throw new Error(`file ${addressPathFile} is missing`);
+      }
       const addressPath = fs.readFileSync(addressPathFile, 'utf8').trim();
       console.log("ADDRESS PATH:", addressPath);
       for (const contractName of contractNames) {
           console.log(contractName);
           await deployContractAndSaveAddressToFile(deployer, contractName, addressPath)
       }
-}
-
-function getPackageLine(addressPath) {
-      const directoryPath = path.dirname(addressPath);
-      // Find the index of the target folder in the path
-      const index = directoryPath.indexOf(`${path.sep}kotlin${path.sep}`);
-      const partAfterTargetFolder = index !== -1 ? directoryPath.substring(index + "kotlin".length + 2) : '';
-      console.log(partAfterTargetFolder)
-      return "package " + partAfterTargetFolder.replace(new RegExp(path.sep, 'g'), '.');
 }
 
 async function deployContractAndSaveAddressToFile(deployer, contractName, addressPath) {
@@ -72,4 +67,13 @@ function saveContractAddressToFrontend(contractName, contractAddress, addressPat
         console.log(newText);
         fs.writeFileSync(addressPath, newText);
     }
+}
+
+function getPackageLine(addressPath) {
+      const directoryPath = path.dirname(addressPath);
+      // Find the index of the target folder in the path
+      const index = directoryPath.indexOf(`${path.sep}kotlin${path.sep}`);
+      const partAfterTargetFolder = index !== -1 ? directoryPath.substring(index + "kotlin".length + 2) : '';
+      console.log(partAfterTargetFolder)
+      return "package " + partAfterTargetFolder.replace(new RegExp(path.sep, 'g'), '.');
 }

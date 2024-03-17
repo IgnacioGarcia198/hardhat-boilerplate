@@ -5,7 +5,6 @@ require("@nomiclabs/hardhat-etherscan");
 // project. It imports a Hardhat task definition, that can be used for
 // testing the frontend.
 require("./tasks/faucet");
-require("./tasks/myTask");
 require("./tasks/deploy");
 
 /** @type import('hardhat/config').HardhatUserConfig */
