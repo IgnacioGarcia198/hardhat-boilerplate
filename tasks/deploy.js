@@ -6,6 +6,7 @@ task("deploy", "Runs a custom script with parameters")
   .setAction(async (taskArgs, hre) => {
     // You can now access the parameter as taskArgs.name
     try {
+        await hre.run('compile');
         await runTask(taskArgs, hre)
     } catch (error) {
         console.error('Error occurred:', '\x1b[31m', error, '\x1b[0m');
