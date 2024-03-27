@@ -6,9 +6,11 @@ require("@nomiclabs/hardhat-etherscan");
 // testing the frontend.
 require("./tasks/faucet");
 require("./tasks/deploy");
+require("./tasks/reset");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
+  defaultNetwork: "localhost",
   solidity: "0.8.17",
   networks: {
     hardhat: {

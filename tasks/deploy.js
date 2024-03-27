@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-task("deploy", "Runs a custom script with parameters")
+task("deploy", "Deploys a given contract")
   .addParam("contract", "Contract name")
   .setAction(async (taskArgs, hre) => {
     // You can now access the parameter as taskArgs.name

@@ -7,16 +7,13 @@ smart contract development.
 This project is intended to be used with the
 [Hardhat Beginners Tutorial](https://hardhat.org/tutorial), but you should be
 able to follow it by yourself by reading the README and exploring its
-`contracts`, `tests`, `scripts` and `frontend` directories.
+`contracts`, `tests`, `scripts` directories.
 
 ## Quick start
 
-The first things you need to do are cloning this repository and installing its
-dependencies:
+This repo is intended to be used a a submodule of KobWeb3 project.
 
 ```sh
-git clone https://github.com/NomicFoundation/hardhat-boilerplate.git
-cd hardhat-boilerplate
 npm install
 ```
 
@@ -26,19 +23,20 @@ Once installed, let's run Hardhat's testing network:
 npx hardhat node
 ```
 
-Then, on a new terminal, go to the repository's root folder and run this to
-deploy your contract:
+Then, on a new terminal deploy your contract:
 
 ```sh
-npx hardhat run scripts/deploy.js --network localhost
+npx hardhat deploy --network localhost --contract TestContract
 ```
 
-Finally, we can run the frontend with:
-
+If you are going to operate with any web3 wallet, don't forget to fund your account:
 ```sh
-cd frontend
-npm install
-npm start
+npx hardhat --network localhost faucet <your wallet address>
+```
+
+You can reset your network at any time (you will need to re-deploy your contract after this):
+```sh
+npx hardhat reset
 ```
 
 Open [http://localhost:3000/](http://localhost:3000/) to see your Dapp. You will
